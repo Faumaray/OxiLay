@@ -14,6 +14,8 @@
       packages = forAllSystems (system: import ./default.nix {
         pkgs = import nixpkgs { inherit system; };
       });
-      overlay = import ./overlay.nix;
+      overlays = {
+        default = import ./overlay.nix  { inherit nixpkgs; };
+      };
     };
 }
