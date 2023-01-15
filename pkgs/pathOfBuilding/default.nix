@@ -22,13 +22,13 @@
 }:
 let
 #https://github.com/PathOfBuildingCommunity/PathOfBuilding
-    pathOfBuilding = fetchFromGitHub{
+    pathOfBuilding = fetchFromGitHub {
       owner = "PathOfBuildingCommunity";
       repo = "PathOfBuilding";
-      rev = "5516a7e130046b6b5f2d72e3a10927e94a6213ee";
-      sha256 = "VsJJcyA56/BmugaA3084ieMEzL0LU4GZmE0k2dL2GyY=";
+      rev = "HEAD";
+      hash = "sha256-8RdEzoYVZ3pK4SJkOVTZ4RAMLl6UeMrQSN5Zy4EDE/E=";
     };
-#https://gitlab.com/bcareil/pobfrontend.git#branch=luajit
+#https://gitlab.com/bcareil/pobfrontend.git#branch=luajit NO UPDATES
     pobFrontend = fetchFromGitLab {
       owner = "bcareil";
       repo = "pobfrontend";
@@ -50,7 +50,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "path-of-building-community";
-  version = "2.23.0";
+  version = "2.25.1";
 
   doUnpack = false;
   doConfigure = false;
