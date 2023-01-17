@@ -7,22 +7,14 @@
 #     nix-build -A mypackage
 
 { pkgs ? import <nixpkgs> { } }:
-
-{
-  # The `lib`, `modules`, and `overlay` names are special
-  lib = import ./lib { inherit pkgs; }; # functions
-  modules = import ./modules; # NixOS modules
-  overlays = import ./overlays; # nixpkgs overlays
-
-  webcord = pkgs.callPackage ./pkgs/webcord { };
-  pob-community = pkgs.callPackage ./pkgs/pathOfBuilding { };
-  wineWaylandLatest = (pkgs.wineWowPackages.waylandFull.overrideAttrs (oldAttrs: {
+let 
+  wineWaylandLatestPkg = (pkgs.wineWowPackages.waylandFull.overrideAttrs (oldAttrs: {
     repo = "wine";
     rev = "wayland";
     version = "8.0-rc4";
     hash = "sha256-KpmuvjOHccQWRs7z7Nxp6gX2+ZF74rdeuWjiLmtOC8g=";
   }));
-  wineLoLWaylandLatest = (pkgs.wineWowPackages.waylandFull.overrideAttrs (oldAttrs: {
+  wineLoLWaylandLatestPkg = (pkgs.wineWowPackages.waylandFull.overrideAttrs (oldAttrs: {
     repo = "wine";
     rev = "wayland";
     version = "8.0-rc4";
@@ -32,6 +24,18 @@
     ];
   }));
 
+in
+{
+  # The `lib`, `modules`, and `overlay` names are special
+  lib = import ./lib { inherit pkgs; }; # functions
+  modules = import ./modules; # NixOS modules
+  overlays = import ./overlays; # nixpkgs overlays
+
+  webcord = pkgs.callPackage ./pkgs/webcord { };
+  pob-community = pkgs.callPackage ./pkgs/pathOfBuilding { };
+  wineLoLWaylandLatest = pkgs.callPackage wineLoLWaylandLatestPkg { };
+  wineWaylandLatest = pkgs.callPackage wineWaylandLatestPkg { };
+  
   # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
   # ...
 }
