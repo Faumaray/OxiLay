@@ -15,6 +15,8 @@
 
   webcord = pkgs.callPackage ./pkgs/webcord { };
   pob-community = pkgs.callPackage ./pkgs/pathOfBuilding { };
+  wineWaylandLatest = pkgs.callPackage ./pkgs/Wine/default.nix { };
+  wineLoLWaylandLatest = pkgs.callPackage ./pkgs/Wine/lol.nix { };
   
   # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
   # ...
