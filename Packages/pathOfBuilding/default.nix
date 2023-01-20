@@ -150,6 +150,6 @@ in
       homepage = "https://github.com/PathOfBuildingCommunity/PathOfBuilding";
       license = licenses.mit;
       maintainers = with maintainers; [extends];
-      platforms = ["x86_64-linux"];
+      platforms = ["x86_64-linux" "aarch64-linux"];
     };
   }

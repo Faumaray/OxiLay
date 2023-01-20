@@ -1,20 +1,19 @@
 {
   description = "My personal Overlay with binary cache repository";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  outputs = inputs @ {
+  outputs = {
     self,
     nixpkgs,
   }: let
     systems = [
       "x86_64-linux"
-      "i686-linux"
-      "x86_64-darwin"
+      # Because of wine, maybe check later not sure if ever gonna use ARM
+      # "aarch64-linux"
     ];
     forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
   in {
     overlays.default = _: prev:
       import ./Packages {
-        inherit inputs;
         pkgs = prev;
       };
 
@@ -26,6 +25,6 @@
 
     homeManagerModules.default = import ./HMModules self;
 
-    formatter = self.lib.genSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
   };
 }
