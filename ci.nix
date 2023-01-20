@@ -13,7 +13,6 @@
 
 with builtins;
 let
-  isReserved = n: n == "lib" || n == "overlays" || n == "modules";
   isDerivation = p: isAttrs p && p ? type && p.type == "derivation";
   isBuildable = p: !(p.meta.broken or false) && p.meta.license.free or true;
   isCacheable = p: !(p.preferLocalBuild or false);
@@ -34,18 +33,17 @@ let
 
   outputsOf = p: map (o: p.${o}) p.outputs;
 
-  nurAttrs = import ./default.nix { inherit pkgs; };
+  attrs = import ./Packages { inherit pkgs; };
 
-  nurPkgs =
+  packages =
     flattenPkgs
       (listToAttrs
-        (map (n: nameValuePair n nurAttrs.${n})
-          (filter (n: !isReserved n)
-            (attrNames nurAttrs))));
+        (map (n: nameValuePair n attrs.${n})
+            (attrNames attrs)));
 
 in
 rec {
-  buildPkgs = filter isBuildable nurPkgs;
+  buildPkgs = filter isBuildable packages;
   cachePkgs = filter isCacheable buildPkgs;
 
   buildOutputs = concatMap outputsOf buildPkgs;
