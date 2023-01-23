@@ -18,8 +18,8 @@ jobs:
           - nixpkgs=channel:nixpkgs-unstable
           - nixpkgs=channel:nixos-22.11
         package:
-          - wine-wayland-lol
-          - wine-wayland-lol
+          - wine-lol-wayland
+          - wine-wayland
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
