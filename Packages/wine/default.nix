@@ -26,10 +26,10 @@
     stdenv = stdenv_32bit;
     vkd3dArches = lib.optionals supportFlags.vkd3dSupport [sources.vkd3d sources.vkd3d_i686];
   };
-  pnameGen = n: n + lib.optionalString (build == "full") "-full";
+  pnameGen = n: n + lib.optionalString (lib.hasInfix "full" build) "-full";
 in {
-  wine-wayland-lol = let
-    pname = pnameGen "wine-wayland-lol";
+  wine-lol-wayland = let
+    pname = pnameGen "wine-lol";
   in
     callPackage "${inputs.nixpkgs}/pkgs/applications/emulators/wine/base.nix" (defaults
       // {
@@ -47,7 +47,7 @@ in {
       });
 
   wine-wayland = let
-    pname = pnameGen "wine-wayland";
+    pname = pnameGen "wine";
   in
     callPackage "${inputs.nixpkgs}/pkgs/applications/emulators/wine/base.nix" (defaults
       // {

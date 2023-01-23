@@ -34,6 +34,12 @@ rec {
     usbSupport = true;
   };
 
+  wayland-base = 
+    base
+    // {
+      waylandSupport = true;
+      };
+
   full =
     base
     // {
@@ -51,4 +57,10 @@ rec {
       vkd3dSupport = true;
       embedInstallers = true;
     };
+
+    wayland-full = 
+      full
+      // {
+        waylandSupport = true;
+      };
 }
