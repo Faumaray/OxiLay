@@ -34,11 +34,11 @@ rec {
     usbSupport = true;
   };
 
-  wayland-base = 
+  wayland-base =
     base
     // {
       waylandSupport = true;
-      };
+    };
 
   full =
     base
@@ -58,9 +58,9 @@ rec {
       embedInstallers = true;
     };
 
-    wayland-full = 
-      full
-      // {
-        waylandSupport = true;
-      };
+  wayland-full =
+    full
+    // {
+      waylandSupport = true;
+    };
 }
