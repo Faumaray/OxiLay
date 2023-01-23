@@ -1,7 +1,7 @@
 {
   description = "My personal Overlay with binary cache repository";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  outputs = {
+  outputs = inputs @ {
     self,
     nixpkgs,
   }: let
@@ -14,6 +14,7 @@
   in {
     overlays.default = _: prev:
       import ./Packages {
+        inherit inputs;
         pkgs = prev;
       };
 
