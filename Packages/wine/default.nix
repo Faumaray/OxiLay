@@ -37,7 +37,6 @@ in {
         version = "8.0-rc4";
         src = sources.wine_wayland;
         patches = [
-          ./league_of_legends_patches/vulkan.patch
           ./league_of_legends_patches/0002-LoL-6.17+-syscall-fix.patch
           ./league_of_legends_patches/0003-LoL-abi.vsyscall32-alternative_patch_by_using_a_fake_cs_segment.patch
           ./league_of_legends_patches/0004-LoL-broken-client-update-fix.patch
