@@ -16,7 +16,7 @@ index 19fd240f0cb..11dc3f7b1a3 100644
      params.device = device;
      params.pAllocator = allocator;
      status = UNIX_CALL(vkDestroyDevice, &params);
-+    TRACE("DEVICE DESTROY %p, %p\n\n", status, instance);
++    TRACE("DEVICE DESTROY %p, %p\n\n", status, device);
      assert(!status);
      free(device);
  }
@@ -24,7 +24,7 @@ index 19fd240f0cb..11dc3f7b1a3 100644
      params.commandPool = handle;
      params.pAllocator = allocator;
      status = UNIX_CALL(vkDestroyCommandPool, &params);
-+    TRACE("COMMANDPOOL DESTROY %p, %p\n\n", status, instance);
++    TRACE("COMMANDPOOL DESTROY %p, %p\n\n", status, handle);
      assert(!status);
      free(cmd_pool);
  }
