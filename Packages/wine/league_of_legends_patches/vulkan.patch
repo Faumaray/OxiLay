@@ -1,0 +1,30 @@
+diff --git a/dlls/winevulkan/loader.c b/dlls/winevulkan/loader.c
+index 19fd240f0cb..11dc3f7b1a3 100644
+--- a/dlls/winevulkan/loader.c
++++ b/dlls/winevulkan/loader.c
+@@ -288,7 +288,8 @@ void WINAPI vkDestroyInstance(VkInstance instance, const VkAllocationCallbacks *
+     params.instance = instance;
+     params.pAllocator = pAllocator;
+     status = UNIX_CALL(vkDestroyInstance, &params);
+-    assert(!status);
++    TRACE("INSTANCE DESTROY %p, %p\n\n", status, instance);
++    // assert(!status);
+     free(instance);
+ }
+ 
+@@ -495,6 +496,7 @@ void WINAPI vkDestroyDevice(VkDevice device, const VkAllocationCallbacks *alloca
+     params.device = device;
+     params.pAllocator = allocator;
+     status = UNIX_CALL(vkDestroyDevice, &params);
++    TRACE("DEVICE DESTROY %p, %p\n\n", status, instance);
+     assert(!status);
+     free(device);
+ }
+@@ -546,6 +548,7 @@ void WINAPI vkDestroyCommandPool(VkDevice device, VkCommandPool handle, const Vk
+     params.commandPool = handle;
+     params.pAllocator = allocator;
+     status = UNIX_CALL(vkDestroyCommandPool, &params);
++    TRACE("COMMANDPOOL DESTROY %p, %p\n\n", status, instance);
+     assert(!status);
+     free(cmd_pool);
+ }
