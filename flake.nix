@@ -18,11 +18,10 @@
         pkgs = prev;
       };
 
-    packages = forAllSystems (system:
-      default = self.overlays.default null (import nixpkgs {
-        inherit system;
+    packages.x86_64-linux.default = self.overlays.default null (import nixpkgs {
+        system = "x86_64-linux";
         config.allowUnfree = true;
-      }));
+      });
 
     homeManagerModules.default = import ./HMModules self;
 
