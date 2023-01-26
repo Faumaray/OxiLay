@@ -23,6 +23,8 @@
         inherit system;
         config.allowUnfree = true;
       }));
+      
+    defaultPackage = forAllSystems (system: self.packages.${system}.wine-lol-wayland;);
 
     homeManagerModules.default = import ./HMModules self;
 
