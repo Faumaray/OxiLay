@@ -19,10 +19,11 @@
       };
 
     packages = {forAllSystems (system:
-      default.${system} = self.overlays.default null (import nixpkgs {
+      self.overlays.default null (import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-      }));};
+      }));
+    packages.x86_64-linux.default = self.packages.x86_64-linux.wine-lol-wayland;
 
     homeManagerModules.default = import ./HMModules self;
 
