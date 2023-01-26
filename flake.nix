@@ -23,8 +23,6 @@
         inherit system;
         config.allowUnfree = true;
       }));
-      
-    defaultPackage.x86_64-linux = self.legacyPackages.wine-lol-wayland;
 
     homeManagerModules.default = import ./HMModules self;
 
