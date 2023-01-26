@@ -19,7 +19,7 @@
       };
 
     packages = forAllSystems (system:
-      self.overlays.default null (import nixpkgs {
+      default = self.overlays.default null (import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       }));
