@@ -17,7 +17,6 @@
     pob-community = pkgs.callPackage ./pathOfBuilding {};
     wine-wayland = wineBuilder "wine-wayland" "wayland-full" {};
     wine-lol-wayland = wineBuilder "wine-lol-wayland" "wayland-full" {};
-    default = wineBuilder "wine-lol-wayland" "wayland-full" {};
   };
 in
   packages
