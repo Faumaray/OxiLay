@@ -87,3 +87,4 @@ buildNpmPackage rec {
     maintainers = with maintainers; [ huantian ];
     platforms = electron_24.meta.platforms;
   };
+}
