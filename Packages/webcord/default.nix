@@ -6,7 +6,7 @@
 , pipewire
 , libpulseaudio
 , xdg-utils
-, electron_22
+, electron_23
 , makeDesktopItem
 , nix-update-script
 }:
@@ -56,7 +56,7 @@ buildNpmPackage rec {
     install -Dm644 sources/assets/icons/app.png $out/share/icons/hicolor/256x256/apps/webcord.png
 
     # Add xdg-utils to path via suffix, per PR #181171
-    makeWrapper '${electron_22}/bin/electron' $out/bin/webcord \
+    makeWrapper '${electron_23}/bin/electron' $out/bin/webcord \
       --prefix LD_LIBRARY_PATH : ${libPath}:$out/opt/webcord \
       --suffix PATH : "${lib.makeBinPath [ xdg-utils ]}" \
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto}}" \
@@ -85,6 +85,6 @@ buildNpmPackage rec {
     changelog = "https://github.com/SpacingBat3/WebCord/releases/tag/v${version}";
     license = licenses.mit;
     maintainers = with maintainers; [ huantian ];
-    platforms = electron_22.meta.platforms;
+    platforms = electron_23.meta.platforms;
   };
 }
