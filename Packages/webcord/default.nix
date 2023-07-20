@@ -1,156 +1,89 @@
-{
-  lib,
-  stdenv,
-  fetchurl,
-  makeWrapper,
-  xdg-utils,
-  dpkg,
-  xorg,
-  alsa-lib,
-  at-spi2-atk,
-  at-spi2-core,
-  atk,
-  cairo,
-  cups,
-  dbus,
-  expat,
-  fontconfig,
-  freetype,
-  gdk-pixbuf,
-  glib,
-  gtk3,
-  libcxx,
-  libdrm,
-  libnotify,
-  libpulseaudio,
-  libuuid,
-  libX11,
-  libXScrnSaver,
-  libXcomposite,
-  libXcursor,
-  libXdamage,
-  libXext,
-  libXfixes,
-  libXi,
-  libXrandr,
-  libXrender,
-  libXtst,
-  libxcb,
-  libxshmfence,
-  mesa,
-  nspr,
-  nss,
-  pango,
-  systemd,
-  libappindicator-gtk3,
-  libdbusmenu,
-  writeScript,
-  pipewire,
-  libxkbcommon,
-  libGL,
-  electron,
+{ lib
+, buildNpmPackage
+, fetchFromGitHub
+, copyDesktopItems
+, python3
+, pipewire
+, libpulseaudio
+, xdg-utils
+, electron_24
+, makeDesktopItem
+, nix-update-script
 }:
-stdenv.mkDerivation rec {
-  pname = "webcord";
-  version = "4.1.1";
 
-  src = fetchurl {
-    url = "https://github.com/SpacingBat3/WebCord/releases/download/v${version}/${pname}_${version}_amd64.deb";
-    sha256 = "a+58qW0HSBe9EfhxVA5KVxgH/RRH4WZwUGVt25QQYi0=";
+buildNpmPackage rec {
+  pname = "webcord";
+  version = "4.3.0";
+
+  src = fetchFromGitHub {
+    owner = "SpacingBat3";
+    repo = "WebCord";
+    rev = "v${version}";
+    hash = "sha256-E/WXAVSCNTDEDaz71LXOHUf/APFO2uSpkTRhlZfQp0E=";
   };
 
-  dontUnpack = true;
-  dontBuild = true;
-  dontPatchELF = true;
+  npmDepsHash = "sha256-vGaYjM13seVmRbVPyDIM+qhGTCj6rw/el6Dq3KMzDks=";
 
-  nativeBuildInputs = [makeWrapper dpkg];
+  nativeBuildInputs = [
+    copyDesktopItems
+    python3
+  ];
 
-  libPath =
-    lib.makeLibraryPath [
-      libcxx
-      systemd
-      libpulseaudio
-      libdrm
-      mesa
-      stdenv.cc.cc
-      alsa-lib
-      atk
-      at-spi2-atk
-      at-spi2-core
-      cairo
-      cups
-      dbus
-      expat
-      fontconfig
-      freetype
-      gdk-pixbuf
-      glib
-      gtk3
-      libnotify
-      libX11
-      libXcomposite
-      libuuid
-      libXcursor
-      libXdamage
-      libXext
-      libXfixes
-      libXi
-      libXrandr
-      libXrender
-      libXtst
-      nspr
-      nss
-      libxcb
-      pango
-      libGL
-      libXScrnSaver
-      libappindicator-gtk3
-      libdbusmenu
-      libxkbcommon
-      pipewire
-    ]
-    + ":${stdenv.cc.cc.lib}/lib64";
+  libPath = lib.makeLibraryPath [
+    pipewire
+    libpulseaudio
+  ];
 
+  # npm install will error when electron tries to download its binary
+  # we don't need it anyways since we wrap the program with our nixpkgs electron
+  ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
+
+  # remove husky commit hooks, errors and aren't needed for packaging
+  postPatch = ''
+    rm -rf .husky
+  '';
+
+  # override installPhase so we can copy the only folders that matter
   installPhase = ''
     runHook preInstall
-    # Unpack release
-    dpkg --fsys-tarfile $src | tar --extract
-    rm -rf usr/share/lintian
 
-    # Create necessary folders
-    mkdir -p $out/{bin,lib,share}
+    # Remove dev deps that aren't necessary for running the app
+    npm prune --omit=dev
 
-    # Move artifacts to out folder
-    mv usr/bin/* $out/bin
-    mv usr/share/* $out/share
-    mv usr/lib/webcord/* $out/lib
+    mkdir -p $out/lib/node_modules/webcord
+    cp -r app node_modules sources package.json $out/lib/node_modules/webcord/
 
-    # Fix permisions
-    chmod -R g-w $out
+    install -Dm644 sources/assets/icons/app.png $out/share/icons/hicolor/256x256/apps/webcord.png
 
-    # Delete generated binary file
-    rm $out/bin/webcord
-
-    # Make out own executable with local electron
-    makeWrapper ${electron}/bin/electron $out/bin/webcord \
-      --set NIXOS_OZONE_WL 1 \
-      --set LD_LIBRARY_PATH "${libPath}:$out/lib" \
-      --prefix PATH : ${lib.makeBinPath [xdg-utils]} \
-      --add-flags "$out/lib/resources/app.asar --use-gl=desktop --ozone-platform-hint=wayland --enable-features=WaylandWindowDecorations"
-
-    # Fix path in desktop file
-    substituteInPlace $out/share/applications/webcord.desktop \
-        --replace /usr/bin/ $out/bin/ \
-        --replace /usr/share/ $out/share/
+    # Add xdg-utils to path via suffix, per PR #181171
+    makeWrapper '${electron_24}/bin/electron' $out/bin/webcord \
+      --prefix LD_LIBRARY_PATH : ${libPath}:$out/opt/webcord \
+      --suffix PATH : "${lib.makeBinPath [ xdg-utils ]}" \
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform=wayland}}" \
+      --add-flags $out/lib/node_modules/webcord/
 
     runHook postInstall
   '';
 
+  desktopItems = [
+    (makeDesktopItem {
+      name = "webcord";
+      exec = "webcord";
+      icon = "webcord";
+      desktopName = "WebCord";
+      comment = meta.description;
+      categories = [ "Network" "InstantMessaging" ];
+    })
+  ];
+
+  passthru.updateScript = nix-update-script { };
+
   meta = with lib; {
-    description = "A Discord and Fosscord electron-based client implemented without Discord API.";
+    description = "A Discord and Fosscord electron-based client implemented without Discord API";
     homepage = "https://github.com/SpacingBat3/WebCord";
+    downloadPage = "https://github.com/SpacingBat3/WebCord/releases";
+    changelog = "https://github.com/SpacingBat3/WebCord/releases/tag/v${version}";
     license = licenses.mit;
-    maintainers = with maintainers; [extends];
-    platforms = ["x86_64-linux" "aarch64-linux"];
+    maintainers = with maintainers; [ huantian ];
+    platforms = electron_24.meta.platforms;
   };
-}
