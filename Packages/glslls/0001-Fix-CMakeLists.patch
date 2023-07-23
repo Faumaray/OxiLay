@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 129b1e3..346b320 100644
+index 129b1e3..e631539 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,60 +2,36 @@ cmake_minimum_required(VERSION 3.0.0)
@@ -86,7 +86,7 @@ index 129b1e3..346b320 100644
 +  glslang::glslang-default-resource-limits
 +  fmt::fmt-header-only)
 +
-+install(TARGETS glslls RUNTIME DESTINATION bin)
++install(TARGETS glslls RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 diff --git a/src/includer.hpp b/src/includer.hpp
 index 5521eb6..a321474 100644
 --- a/src/includer.hpp
