@@ -2,23 +2,12 @@
   inputs,
   pkgs,
 }: let
-  inherit (pkgs) callPackage;
-  wineBuilder = wine: build: extra:
-    (import ./wine ({
-        inherit inputs build pkgs;
-        inherit (pkgs) callPackage lib moltenvk pkgsCross pkgsi686Linux stdenv_32bit;
-        supportFlags = (import ./wine/supportFlags.nix).${build};
-      }
-      // extra))
-    .${wine};
-
   packages = rec {
     webcord = pkgs.callPackage ./webcord {};
     pob-community = pkgs.callPackage ./pathOfBuilding {};
-    wine-wayland = wineBuilder "wine-wayland" "wayland-full" {};
-    wine-lol-wayland = wineBuilder "wine-lol-wayland" "wayland-full" {};
     glsl-language-server = pkgs.callPackage ./glslls {};
-    default = wineBuilder "wine-lol-wayland" "wayland-full" {};
+    glfw-minecraft-wayland = pkgs.callPackage ./glfw/glfw-minecraft-wayland.nix {};
+    default = pkgs.callPackage ./webcord {};
   };
 in
   packages
