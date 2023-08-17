@@ -5,18 +5,14 @@
   pkgconf,
   stdenv,
   fetchurl,
-  zlib,
+  libGL,
   qt5,
   luajit,
-  libGL,
   curl,
-  liberation_ttf,
-  ttf_bitstream_vera,
   meson,
   ninja,
   unzip,
   rsync,
-  dbus,
   makeWrapper,
   makeDesktopItem,
 }: let
@@ -24,8 +20,8 @@
   pathOfBuilding = fetchFromGitHub {
     owner = "PathOfBuildingCommunity";
     repo = "PathOfBuilding";
-    rev = "HEAD";
-    hash = "sha256-8RdEzoYVZ3pK4SJkOVTZ4RAMLl6UeMrQSN5Zy4EDE/E=";
+    rev = "4b92642f06f81bec14ac551c841633ba9201df24";
+    hash = "sha256-gV3Xi5DLq6T7pTdB8qsBmeykH2D+OPMe2tvXJp+0aLY=";
   };
   #https://gitlab.com/bcareil/pobfrontend.git#branch=luajit NO UPDATES
   pobFrontend = fetchFromGitLab {
@@ -49,7 +45,7 @@
 in
   stdenv.mkDerivation rec {
     pname = "path-of-building-community";
-    version = "2.25.1";
+    version = "2.31.2";
 
     doUnpack = false;
     doConfigure = false;
