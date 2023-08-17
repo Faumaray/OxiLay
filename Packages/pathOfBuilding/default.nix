@@ -125,8 +125,7 @@ in
       ln -sf $out/opt/pobfrontend $out/bin/PathOfBuildingCommunity
 
        wrapQtApp $out/bin/PathOfBuildingCommunity \
-         --set LUA_PATH "$out/opt/runtime/lua/?.lua;$out/opt/runtime/lua/?/init.lua;$LUA_PATH" \
-         --prefix PWD "$out/opt"
+         --set LUA_PATH "$out/opt/runtime/lua/?.lua;$out/opt/runtime/lua/?/init.lua;$LUA_PATH"
 
        cp -r ${makeDesktopItem {
         desktopName = "Path of Building (Community)";
